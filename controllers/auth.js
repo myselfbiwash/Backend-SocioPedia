@@ -32,7 +32,9 @@ export const register = async (req, res) => {
       impressions: Math.floor(Math.random() * 10000),
     });
     const savedUser = await newUser.save();
-    res.status(201).json({savedUser: savedUser});
+    const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET);
+    delete savedUser.password;
+    res.status(200).json({ token, user:savedUser });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
